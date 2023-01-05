@@ -1,8 +1,9 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const cors = require('cors');
+const app = express();
 
 const userRoutes = require('./routes/user');
+const sauceRoutes = require('./routes/sauce');
 
 mongoose.connect('mongodb+srv://Maxime:0HbZa16hfOklBe7a@clusterp6.zmbbgqt.mongodb.net/?retryWrites=true&w=majority',
   { useNewUrlParser: true,
@@ -10,13 +11,8 @@ mongoose.connect('mongodb+srv://Maxime:0HbZa16hfOklBe7a@clusterp6.zmbbgqt.mongod
   .then(() => console.log('Connexion à MongoDB réussie !'))
   .catch(() => console.log('Connexion à MongoDB échouée !'));
 
-const app = express();
-app.use(express.json());
 
-app.use((req, res, next) => {
-  console.log('Requête reçue')
-  next();
-});
+app.use(express.json());
 
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -25,20 +21,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use((req, res, next) => {
-    res.status(201);
-    next();
-})
-
-app.use((req, res, next) => {
-    res.json({ message: 'Votre requête à bien été reçue'})
-    next();
-});
-
-app.use((req, res, next) => {
-    console.log('Réponse envoyée avec succès !')
-});
-
 app.use('/api/auth', userRoutes);
+app.use('/api/sauce', sauceRoutes);
 
 module.exports = app;
