@@ -1,6 +1,5 @@
 const Sauce = require('../models/Sauce');
 const fs = require('fs');
-const { userInfo } = require('os');
 
 // the CRUD
 
