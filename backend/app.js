@@ -11,7 +11,7 @@ const dotenv = require('dotenv');
 
 dotenv.config();
 mongoose.set('strictQuery', false);
-mongoose.connect(process.env.MONGO_CONNECT)
+mongoose.connect(process.env.MONGO_CONNECT, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('Connexion à MongoDB réussie !'))
   .catch(() => console.log('Connexion à MongoDB échouée !'));
 
