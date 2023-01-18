@@ -125,16 +125,16 @@ exports.getAllSauce = (req, res, next) => {
 
 exports.likeSauce = (req, res, next) => {
 
-    // User like a sauce for the first time
-    // pushing the userId to usersLiked array and incrementing the key likes
+    // L'utilisateur Like une sauce pour la premiere fois
+    // push userId dans le tableau usersLiked et on incremente la clé "likes" dans la base de donnée
 
     if (req.body.like === 1) {
         Sauce.updateOne({_id: req.params.id}, {$inc: {likes: req.body.like++}, $push: {usersLiked: req.body.userId}})
             .then(() => res.status(200).json({message: 'Like ajouté !'}))
             .catch(error => res.status(400).json({error}))
 
-    // User dislike a sauce for the first time
-    // pushing the userId to users$Disliked array and incrementing the key dislikes
+    // L'utilisateur dislike une sauce pour la premiere fois
+    // push userId dans le tableau usersDisliked et on incremente la clé "dislikes" dans la base de donnée
 
     } else if (req.body.like === -1) {
         Sauce.updateOne({ _id: req.params.id }, { $inc: { dislikes: (req.body.like++) * -1 }, $push: { usersDisliked: req.body.userId } })
@@ -142,7 +142,8 @@ exports.likeSauce = (req, res, next) => {
             .catch(error => res.status(400).json({error}))
     }
 
-    // User is taking back his like
+    // l'utilisateur enleve son like
+    // on effectue un -1 sur la clé "likes" et on pull userId du tableau usersLiked
 
     else {
         Sauce.findOne({ _id: req.params.id })
@@ -152,7 +153,8 @@ exports.likeSauce = (req, res, next) => {
                         .then(() => { res.status(200).json({message: 'Like deleted !'}) })
                         .catch(error => res.status(400).json({error}))
 
-    // User is talking back his dislike
+    // User eleve son dislike
+    // on effectue un -1 sur la clé "dislikes" et on pull userId du tableau usersDisliked
     
                 } else if (sauce.usersDisliked.includes(req.body.userId)) {
                     Sauce.updateOne({ _id: req.params.id }, { $pull: { usersDisliked: req.body.userId }, $inc: { dislikes: -1 } })
