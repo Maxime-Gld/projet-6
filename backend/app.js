@@ -2,7 +2,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const path = require('path');
-
+const fs = require('fs');
+const morgan = require('morgan');
 const app = express();
 
 const userRoutes = require('./routes/user');
@@ -19,6 +20,10 @@ mongoose.connect(process.env.MONGO_CONNECT, { useNewUrlParser: true, useUnifiedT
 app.use(express.json());
 // CORS 
 app.use(cors());
+
+// log
+const accesLogs = fs.createWriteStream(path.join(__dirname, 'acces.log'), {flags: "a"});
+app.use(morgan('combined', {stream: accesLogs}));
 
 // routes
 app.use('/api/auth', userRoutes);
